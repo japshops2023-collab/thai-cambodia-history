@@ -12,44 +12,6 @@
     <!-- Application Structure Plan: 
          The app uses a 'Timeline Dashboard' structure. Instead of a long scrolling page, it features a prominent top navigation timeline that segments the history into 4 distinct eras (Ancient, Cold War, Preah Vihear, Current). 
          Why? The conflict spans centuries with distinct characteristics in each era. A tabbed/timeline approach allows users to focus on the specific dynamics of each period without losing context.
-         
-         Layout:
-         1. Hero Section: Title and intro.
-         2. Interactive Timeline: Buttons representing the 4 eras.
-         3. Dynamic Content Area:
-            - Left Column: Narrative details, key events list, and qualitative insights.
-            - Right Column: A dedicated Visualization Panel showing a dynamic chart relevant to that specific era (e.g., Power shifts, Conflict intensity, Incident types).
-         4. Footer: Summary/Synthesis.
-         
-         Key Interactions: Clicking a timeline node updates the content and destroys/renders a new chart.
-    -->
-
-    <!-- Visualization & Content Choices:
-         1. Ancient Era: 
-            - Goal: Show the shift in power. 
-            - Viz: Bar Chart comparing "Strategic Influence" of Ayutthaya vs. Khmer Empire. 
-            - Interaction: Tooltips showing specific battles (1431, 1593).
-            - Justification: Visualizes the 'rise and fall' dynamic described in the text.
-         
-         2. Cold War Era: 
-            - Goal: Illustrate the frequency/intensity of border incidents over time.
-            - Viz: Line Chart (1975-1989) showing estimated tension levels based on text (Khmer Rouge raids -> Full Vietnam War).
-            - Interaction: Points on line show event details (Trat raid, Chong Bok battle).
-            - Justification: Shows the escalation from raids to full conventional warfare.
-            
-         3. Preah Vihear Crisis: 
-            - Goal: Breakdown the 2011 crisis components.
-            - Viz: Doughnut Chart or Horizontal Bar showing "Impact Distribution" (Casualties, Displacement, Diplomatic Fallout). Let's use a Bar Chart for "Conflict Intensity by Event" (Registration vs 2011 Clashes).
-            - Interaction: Bars reveal specific outcomes (ICJ ruling details).
-            - Justification: Highlights the peak violence in 2011 compared to the initial 2008 trigger.
-            
-         4. Current Era: 
-            - Goal: Categorize current friction points.
-            - Viz: Radar Chart showing "Conflict Drivers" (Demarcation, Construction, Patrols, Politics).
-            - Interaction: Hover to see details of specific hotspots (Ta Muen Thom).
-            - Justification: Shows the multi-faceted nature of modern, lower-intensity conflict.
-            
-         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals via HTML/CSS/Canvas.
     -->
 
     <style>
@@ -95,6 +57,33 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
+
+    <!-- COVER OVERLAY SECTION: หน้าปกปลอมเพื่อเพิ่มความน่าสนใจ -->
+    <div id="cover-overlay" 
+         class="fixed inset-0 z-50 flex flex-col items-center justify-center cursor-pointer transition-opacity duration-700 p-8"
+         onclick="hideCover()"
+         style="
+            /* UPDATE: ใช้ URL รูปภาพที่ผู้ใช้ให้มา */
+            background-image: url('https://i.ibb.co/6MCrdTr/Thai-Cambodia-2024-10-10.jpg'); 
+            background-color: #4A3B32; /* สีพื้นหลังในกรณีที่รูปภาพโหลดไม่ขึ้น */
+            background-size: cover; 
+            background-position: center;
+        ">
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold text-[#F9F5F0] text-center mb-6 drop-shadow-lg"
+            style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+            มหากาพย์ความขัดแย้ง: ไทย - กัมพูชา
+        </h1>
+        
+        <div class="text-[#D4A017] text-5xl md:text-7xl font-black text-center p-6 rounded-xl 
+                    shadow-2xl bg-black bg-opacity-40 hover:bg-opacity-60 transition duration-300 
+                    transform hover:scale-105 active:scale-100 ease-in-out border-4 border-[#D4A017]">
+            กดเพื่ออ่าน
+        </div>
+        <p class="mt-8 text-lg text-[#F9F5F0] opacity-80"
+           style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">คลิกที่นี่เพื่อเข้าสู่เนื้อหาบทวิเคราะห์ทางประวัติศาสตร์</p>
+    </div>
+    <!-- END COVER OVERLAY SECTION -->
 
     <!-- Header Section -->
     <header class="bg-[#4A3B32] text-[#F9F5F0] py-6 shadow-md">
@@ -289,6 +278,21 @@
 
         // --- Core Functions ---
 
+        /**
+         * ฟังก์ชันสำหรับซ่อนหน้าปก เมื่อผู้ใช้คลิก
+         */
+        function hideCover() {
+            const cover = document.getElementById('cover-overlay');
+            if (cover) {
+                // เริ่ม Fade-out
+                cover.style.opacity = '0';
+                // ซ่อน element หลังจากการ transition สิ้นสุด (700ms)
+                setTimeout(() => {
+                    cover.style.display = 'none';
+                }, 700); 
+            }
+        }
+
         function initApp() {
             updateEra(0); // Load first era by default
         }
@@ -337,7 +341,6 @@
             });
 
             // 4. Render Chart
-            // FIX: Pass data.chartConfig instead of undefined 'config'
             renderChart(data.chartConfig);
         }
 
